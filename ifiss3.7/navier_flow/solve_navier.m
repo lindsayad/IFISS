@@ -1,6 +1,6 @@
 %SOLVE_NAVIER solve singular Navier-Stokes problem
 %   IFISS scriptfile: DJS; 20 September 2016.
-% Copyright (c) 2005 D.J. Silvester, H.C. Elman, A. Ramage 
+% Copyright (c) 2005 D.J. Silvester, H.C. Elman, A. Ramage
 clear variables
 fprintf('Enclosed flow problem ...\n')
 viscosity=default('viscosity parameter (default 1/100)',1/100);
@@ -25,12 +25,12 @@ gohome
 cd datafiles
 load square_stokes_nobc.mat
 %
-fprintf('stokes system ...\n') 
+fprintf('stokes system ...\n')
 %% boundary conditions
 [Ast,Bst,fst,gst] = flowbc(A,B,f,g,xy,bound);
 nlres0_norm = norm([fst;gst]);
 %
-nv=length(fst)/2; np=length(gst); 
+nv=length(fst)/2; np=length(gst);
 if qmethod>1,
    beta=0;
 % xst=[Ast,Bst';Bst,sparse(np,np)]\[fst;gst];
@@ -73,7 +73,7 @@ spc=default('uniform/nonuniform streamlines 1/2 (default uniform)',1);
 %contourn = default('number of contour lines (default 50)',50);
 flowplot(qmethod,xst,By,Bx,A,xy,xyp,x,y,bound,spc,33);
 %flowplot09(qmethod,xst,By,Bx,A,xy,xyp,x,y,bound,bndxy,bnde,obs,contourn,spc,133)
-pause(1) 
+pause(1)
 fprintf('\n\ninitial nonlinear residual is %e ',nlres0_norm)
 fprintf('\nStokes solution residual is %e\n', nlres_norm)
 flowsol = xst;
@@ -82,7 +82,7 @@ flowsol = xst;
 pde=4;
 it_p = 0;
 %
-% nonlinear iteration 
+% nonlinear iteration
 %% Picard startup step
 while nlres_norm>nlres0_norm*tol_nl && it_p<maxit_p,
   %nlres = nlres - [zeros(2*nv,1);(sum(nlres(2*nv+1:2*nv+np))/np)*ones(np,1)];
@@ -138,7 +138,7 @@ while (nlres_norm > nlres0_norm*tol_nl) && (it_nl < maxit_p + maxit_n),
    elseif qmethod<=1, [Nxx,Nxy,Nyx,Nyy] = newton_q1(xy,ev,flowsol);
    end
    J = viscosity*A + [N + Nxx, Nxy; Nyx, N + Nyy];
-   Jnst = newtonbc(J,xy,bound); 
+   Jnst = newtonbc(J,xy,bound);
 % compute Newton correction and update solution
    if qmethod>1,
 %  dxns = -[Jnst,Bst';Bst,sparse(np,np)]\nlres;
@@ -172,11 +172,11 @@ while (nlres_norm > nlres0_norm*tol_nl) && (it_nl < maxit_p + maxit_n),
 %flowplot09(qmethod,xns,By,Bx,A,xy,xyp,x,y,bound,bndxy,bnde,obs,contourn,spc,166);drawnow
    pause(1)
    flowsol = xns;
-%% end of Newton iteration loop 
+%% end of Newton iteration loop
 end
-if nlres_norm <= nlres0_norm * tol_nl, 
+if nlres_norm <= nlres0_norm * tol_nl,
    fprintf('\nfinished, nonlinear convergence test satisfied\n\n');
-% explicitly reorthogonalize to remove hydrostatic pressure component   
+% explicitly reorthogonalize to remove hydrostatic pressure component
    nlres = nlres - [zeros(2*nv,1);(sum(nlres(2*nv+1:2*nv+np))/np)*ones(np,1)];
 else
    fprintf('\nfinished, stopped on iteration counts\n\n');
@@ -198,6 +198,6 @@ if qmethod==1
    mplot(ee_error,ev,xy,x,y,67);  title('Estimated error')
    pause(5), figure(66)
 elseif qmethod==0
-   error_div = q1div(xy,ev,flowsol);	
-elseif qmethod>1, navierpost, 
+   error_div = q1div(xy,ev,flowsol);
+elseif qmethod>1, navierpost,
 end
