@@ -201,3 +201,8 @@ elseif qmethod==0
    error_div = q1div(xy,ev,flowsol);
 elseif qmethod>1, navierpost,
 end
+
+PetscBinaryWrite('/home/lindad/programming/c/Anst.mat', Anst, 'indices', 'int64')
+PetscBinaryWrite('/home/lindad/programming/c/Bst.mat', Bst, 'indices', 'int64')
+PetscBinaryWrite('/home/lindad/programming/c/Q.mat', Q, 'indices', 'int64')
+PetscBinaryWrite('/home/lindad/programming/c/bound.is', bound, 'indices', 'int64')
