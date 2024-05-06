@@ -112,6 +112,12 @@ while nlres_norm>nlres0_norm*tol_nl && it_p<maxit_p,
    if     qmethod>1,  nlres = [Anst,Bst';Bst,sparse(np,np)]*xns-[fst;gst];
    elseif qmethod<=1, nlres = [Anst,Bst';Bst,-nubeta*C]*xns-[fst;gst];
    end
+   isolated_rhs = nlres(1:size(Anst)(1)) - Bst'*xns(size(xns)(1)-size(Bst')(2)+1:end);
+   PetscBinaryWrite('/home/lindad/programming/c/Anst.mat', Anst, 'indices', 'int64');
+   PetscBinaryWrite('/home/lindad/programming/c/Bst.mat', Bst, 'indices', 'int64');
+   PetscBinaryWrite('/home/lindad/programming/c/Q.mat', Q, 'indices', 'int64');
+   PetscBinaryWrite('/home/lindad/programming/c/b.vec', isolated_rhs, 'indices', 'int64')
+   PetscBinaryWrite('/home/lindad/programming/c/bound.is', bound, 'indices', 'int64');
    nlres_norm = norm(nlres);
    nnv=length(fst); soldiff=norm(xns(1:nnv)-flowsol(1:nnv));
    fprintf('nonlinear residual is %e',nlres_norm)
@@ -201,8 +207,3 @@ elseif qmethod==0
    error_div = q1div(xy,ev,flowsol);
 elseif qmethod>1, navierpost,
 end
-
-PetscBinaryWrite('/home/lindad/programming/c/Anst.mat', Anst, 'indices', 'int64')
-PetscBinaryWrite('/home/lindad/programming/c/Bst.mat', Bst, 'indices', 'int64')
-PetscBinaryWrite('/home/lindad/programming/c/Q.mat', Q, 'indices', 'int64')
-PetscBinaryWrite('/home/lindad/programming/c/bound.is', bound, 'indices', 'int64')
